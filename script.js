@@ -111,8 +111,9 @@ class CellInput {
         const cellLeft = (this.column - 1) * 100; // 100 being the width of one cell
         const cellTop = (this.row - 1) * 20;
         this.ctx.beginPath();
-        this.ctx.clearRect(this.cellLeft, cellTop, 100, 20); // Remove previous text in the cell
-        this.ctx.strokeRect(this.cellLeft, cellTop, 100, 20); // clearRect also removed the borders so add new rectangular border
+        this.ctx.clearRect(cellLeft, cellTop, 100, 20); // Remove previous text in the cell
+        this.ctx.strokeRect(cellLeft, cellTop, 100, 20); // clearRect also removed the borders so add new rectangular border
+        console.log(this.sliceStringToCellSize(inputElem.value));
         this.ctx.fillText(
             this.sliceStringToCellSize(inputElem.value), // Slice string to 100px (cell's width)
             cellLeft,
