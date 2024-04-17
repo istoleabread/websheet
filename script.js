@@ -45,6 +45,7 @@ class CellInput {
 
     createInputBox() {
         const inputBox = document.createElement("input");
+        inputBox.type = "text";
         const cellLeft = (this.column - 1) * 100; // 100 being the width of one cell
         const cellTop = (this.row - 1) * 20;
         const cellValue = ManageCellData.getCellData(this.column, this.row); // Get cell's value if previously written
