@@ -41,21 +41,21 @@ class CellInput {
         this.ctx = ctx;
         this.column = column;
         this.row = row;
-        this.cellLeft = (column - 1) * 100; // 100 being the width of one cell
-        this.cellTop = (row - 1) * 20;
-        this.inputBox = document.createElement("input");
     }
 
     createInputBox() {
+        const inputBox = document.createElement("input");
+        const cellLeft = (this.column - 1) * 100; // 100 being the width of one cell
+        const cellTop = (this.row - 1) * 20;
         const cellValue = ManageCellData.getCellData(this.column, this.row); // Get cell's value if previously written
-        this.inputBox.className = "cellInput";
-        this.inputBox.style.top = `${this.cellTop + this.ctx.canvas.getBoundingClientRect().x}px`;
-        this.inputBox.style.left = `${this.cellLeft + this.ctx.canvas.getBoundingClientRect().y}px`;
-        this.inputBox.style.width = cellValue ? this.getCellSize(cellValue) : "100px";
-        this.inputBox.value = cellValue;
-        document.body.appendChild(this.inputBox);
-        this.inputBox.focus();
-        this.addListeners(this.inputBox);
+        inputBox.className = "cellInput";
+        inputBox.style.top = `${cellTop + this.ctx.canvas.getBoundingClientRect().x}px`;
+        inputBox.style.left = `${cellLeft + this.ctx.canvas.getBoundingClientRect().y}px`;
+        inputBox.style.width = cellValue ? this.getCellSize(cellValue) : "100px";
+        inputBox.value = cellValue;
+        document.body.appendChild(inputBox);
+        inputBox.focus();
+        this.addListeners(inputBox);
     }
 
     addListeners(inputElem) {
@@ -73,8 +73,14 @@ class CellInput {
         inputElem.addEventListener("keyup", (ev) => {
             if (ev.code === "Enter") {
                 this.addCellValue(inputElem);
-                // this.row++;
-                // this.createInputBox();
+                if ((this.row - 1) * 20 >= this.ctx.canvas.height - 20) {
+                    this.row = 1;
+                    this.column++;
+                    this.createInputBox();
+                    return;
+                }
+                this.row++;
+                this.createInputBox();
             }
         });
         inputElem.addEventListener("focusout", () => {
@@ -102,13 +108,15 @@ class CellInput {
     }
 
     addCellValue(inputElem) {
+        const cellLeft = (this.column - 1) * 100; // 100 being the width of one cell
+        const cellTop = (this.row - 1) * 20;
         this.ctx.beginPath();
-        this.ctx.clearRect(this.cellLeft, this.cellTop, 100, 20); // Remove previous text in the cell
-        this.ctx.strokeRect(this.cellLeft, this.cellTop, 100, 20); // clearRect also removed the borders so add new rectangular border
+        this.ctx.clearRect(this.cellLeft, cellTop, 100, 20); // Remove previous text in the cell
+        this.ctx.strokeRect(this.cellLeft, cellTop, 100, 20); // clearRect also removed the borders so add new rectangular border
         this.ctx.fillText(
             this.sliceStringToCellSize(inputElem.value), // Slice string to 100px (cell's width)
-            this.cellLeft,
-            this.cellTop + 15
+            cellLeft,
+            cellTop + 15
         );
         ManageCellData.editData(this.column, this.row, inputElem.value);
         document.body.removeChild(inputElem);
