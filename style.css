@@ -1,0 +1,24 @@
+html {
+    height: 100%;
+    width: 100%;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+canvas {
+    margin: 30px;
+    border: 1px solid #CCC;
+}
+
+.cellInput {
+    position: absolute;
+    height: 20px;
+    font-size: 13px;
+    font-family: 'Ubuntu';
+    border: none;
+    outline: 2px solid green;
+}
