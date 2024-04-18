@@ -46,12 +46,12 @@ class CellInput {
     createInputBox() {
         const inputBox = document.createElement("input");
         inputBox.type = "text";
-        const cellLeft = (this.column - 1) * 100; // 100 being the width of one cell
-        const cellTop = (this.row - 1) * 20;
+        const cellLeft = (this.column - 1) * 100; // 100 being width of one cell
+        const cellTop = (this.row - 1) * 20; // 20 being height of one cell
         const cellValue = ManageCellData.getCellData(this.column, this.row); // Get cell's value if previously written
         inputBox.className = "cellInput";
-        inputBox.style.top = `${cellTop + this.ctx.canvas.getBoundingClientRect().x}px`;
-        inputBox.style.left = `${cellLeft + this.ctx.canvas.getBoundingClientRect().y}px`;
+        inputBox.style.top = `${cellTop + this.ctx.canvas.offsetTop}px`;
+        inputBox.style.left = `${cellLeft + this.ctx.canvas.offsetLeft}px`;
         inputBox.style.width = cellValue ? this.getCellSize(cellValue) : "100px";
         inputBox.value = cellValue;
         document.body.appendChild(inputBox);
@@ -119,21 +119,21 @@ class CellInput {
             cellLeft,
             cellTop + 15
         );
-        ManageCellData.editData(this.column, this.row, inputElem.value);
+        ManageCellData.updateData(this.column, this.row, inputElem.value);
         document.body.removeChild(inputElem);
     }
 }
 
 class ManageCellData {
-    static data = {};
+    static _data = {};
 
-    static editData(column, row, value) {
-        ManageCellData.data[column + "" + row] = value;
+    static updateData(column, row, value) {
+        ManageCellData._data[column + "" + row] = value;
     }
 
     static getCellData(column, row) {
-        if (ManageCellData.data[column + "" + row]) {
-            return ManageCellData.data[column + "" + row];
+        if (ManageCellData._data[column + "" + row]) {
+            return ManageCellData._data[column + "" + row];
         }
         return "";
     }
